@@ -10,129 +10,227 @@
             --primary: #2c3e50;
             --secondary: #34495e;
             --accent: #e74c3c;
-            --bg: #f0f2f5;
+            --bg: #ffffff;
             --border: #ddd;
         }
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); height: 100vh; display: flex; overflow: hidden; }
         
-        /* --- Split Screen Layout --- */
-        .split-container { display: flex; width: 100%; height: 100%; }
-        .pane { padding: 30px; overflow-y: auto; }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background: var(--bg); 
+            color: #333;
+        }
         
-        /* --- LEFT PANE: Admin Portal --- */
-        .admin-pane { flex: 1; background: white; border-right: 1px solid var(--border); max-width: 500px; box-shadow: 2px 0 10px rgba(0,0,0,0.05); z-index: 10; }
-        .admin-header { margin-bottom: 25px; border-bottom: 2px solid var(--bg); padding-bottom: 15px; }
-        .admin-header h2 { color: var(--primary); margin: 0 0 5px 0; }
-        .admin-desc { color: #7f8c8d; font-size: 0.9em; }
+        /* --- Container Layout --- */
+        .container {
+            display: flex;
+            flex-direction: column; /* Stack vertically for better widget fit */
+            gap: 20px;
+            padding: 20px;
+            max-width: 100%;
+        }
         
-        label { display: block; margin: 15px 0 5px; font-weight: 600; color: var(--secondary); }
-        select, input[type="file"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; }
+        /* --- SECTION 1: Admin Panel --- */
+        .admin-panel {
+            background: #f9f9f9;
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .admin-header h2 { 
+            margin: 0 0 5px 0; 
+            font-size: 1.4em; 
+            color: var(--primary); 
+        }
+        
+        .admin-desc { 
+            color: #666; 
+            font-size: 0.9em; 
+            margin-bottom: 15px; 
+        }
+
+        /* Form Grid - Makes inputs sit side-by-side if space allows */
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 600; 
+            font-size: 0.9em; 
+            color: var(--secondary); 
+        }
+        
+        select, input[type="file"] { 
+            width: 100%; 
+            padding: 8px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            background: white;
+        }
         
         .btn-process {
-            background-color: var(--primary); color: white; border: none; padding: 12px; width: 100%;
-            border-radius: 6px; cursor: pointer; font-size: 1em; margin-top: 25px; transition: background 0.2s;
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 1em; 
+            margin-top: 10px;
+            width: 100%; /* Full width button */
+            font-weight: bold;
         }
         .btn-process:hover { background-color: #1a252f; }
         
-        .sample-link { display: inline-block; margin-top: 8px; font-size: 0.85em; color: var(--accent); text-decoration: underline; cursor: pointer; }
-
-        /* --- RIGHT PANE: Store Widget Preview --- */
-        .preview-pane { flex: 2; background: var(--bg); display: flex; justify-content: center; align-items: flex-start; padding-top: 50px; }
-        
-        /* The Actual Widget Container */
-        .mobile-widget {
-            width: 375px; /* Mobile width */
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-            overflow: hidden;
-            min-height: 600px;
-            display: flex;
-            flex-direction: column;
+        .sample-link { 
+            display: block; 
+            margin-top: 5px; 
+            font-size: 0.8em; 
+            color: var(--accent); 
+            text-decoration: underline; 
+            cursor: pointer; 
         }
 
-        .widget-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .store-badge { background: var(--accent); padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: bold; text-transform: uppercase; }
+        /* --- SECTION 2: Preview Widget --- */
+        .preview-container {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .widget-header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 12px 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
         
-        .widget-content { padding: 0 15px 15px 15px; flex: 1; overflow-y: auto; }
+        .store-badge { 
+            background: var(--accent); 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 0.75em; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+        }
+        
+        .widget-content { 
+            padding: 15px; 
+            min-height: 200px; /* Ensures it doesn't collapse */
+        }
         
         .group-header {
-            color: var(--primary); font-size: 0.85em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-            border-bottom: 1px solid #eee; margin: 20px 0 10px 0; padding-bottom: 5px;
+            color: var(--primary); 
+            font-size: 0.9em; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #eee; 
+            margin: 15px 0 10px 0; 
+            padding-bottom: 4px;
         }
 
         /* Task Card Styling */
         .task-card {
-            background: white; border: 1px solid #eee; border-left: 4px solid var(--accent);
-            border-radius: 6px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            background: white; 
+            border: 1px solid #eee; 
+            border-left: 4px solid var(--accent);
+            border-radius: 6px; 
+            padding: 10px; 
+            margin-bottom: 8px; 
             transition: all 0.2s ease;
         }
         
         .task-row { display: flex; gap: 10px; align-items: flex-start; }
-        
-        /* Checkbox */
-        .task-check { width: 18px; height: 18px; cursor: pointer; margin-top: 3px; accent-color: var(--primary); }
-        
+        .task-check { width: 18px; height: 18px; cursor: pointer; margin-top: 2px; accent-color: var(--primary); }
         .task-details { flex: 1; }
-        .task-meta { display: flex; justify-content: space-between; font-size: 0.75em; color: #95a5a6; margin-bottom: 4px; }
-        .task-title { font-weight: 700; color: #333; font-size: 0.95em; margin-bottom: 2px; }
+        
+        .task-meta { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 0.75em; 
+            color: #999; 
+            margin-bottom: 2px; 
+        }
+        
+        .task-title { 
+            font-weight: 700; 
+            color: #333; 
+            font-size: 1em; 
+            margin-bottom: 2px; 
+        }
+        
         .task-title a { color: #2c3e50; text-decoration: none; border-bottom: 1px dotted #333; }
         .task-title a:hover { color: var(--accent); border-bottom: 1px solid var(--accent); }
-        .task-desc { font-size: 0.85em; color: #666; line-height: 1.4; }
+        .task-desc { font-size: 0.85em; color: #666; line-height: 1.3; }
 
         /* Completed State */
-        .task-card.completed { border-left-color: #bdc3c7; background: #f9f9f9; opacity: 0.7; }
+        .task-card.completed { border-left-color: #bdc3c7; background: #fafafa; opacity: 0.6; }
         .task-card.completed .task-title, 
         .task-card.completed .task-desc { text-decoration: line-through; color: #bdc3c7; }
-        .task-card.completed a { pointer-events: none; border: none; }
+        .task-card.completed a { pointer-events: none; }
 
-        .empty-state { text-align: center; color: #bdc3c7; padding: 40px 20px; font-style: italic; }
+        .empty-state { text-align: center; color: #999; padding: 30px; font-style: italic; }
     </style>
 </head>
 <body>
 
-<div class="split-container">
+<div class="container">
     
-    <div class="pane admin-pane">
+    <div class="admin-panel">
         <div class="admin-header">
             <h2>Admin Portal</h2>
-            <div class="admin-desc">Upload CSV to assign tasks to stores.</div>
+            <div class="admin-desc">Upload CSV to assign tasks. <a id="dlSample" class="sample-link">Download Sample CSV</a></div>
         </div>
 
         <form id="adminForm">
-            <label>Select Target Store</label>
-            <select id="storeSelect">
-                <option value="All Locations">All Locations</option>
-                <option value="BAM #102 - Birmingham">BAM #102 - Birmingham</option>
-                <option value="BAM #305 - Nashville">BAM #305 - Nashville</option>
-                <option value="BAM #412 - Orlando">BAM #412 - Orlando</option>
-            </select>
-
-            <label>Upload Task CSV</label>
-            <div style="font-size:0.8em; color:#7f8c8d; margin-bottom:8px;">
-                Required Headers: <strong>Group, Task, Due, Desc, URL</strong>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Select Target Store</label>
+                    <select id="storeSelect">
+                        <option value="All Locations">All Locations</option>
+                        <option value="BAM #102 - Birmingham">BAM #102 - Birmingham</option>
+                        <option value="BAM #305 - Nashville">BAM #305 - Nashville</option>
+                        <option value="BAM #412 - Orlando">BAM #412 - Orlando</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Upload Task CSV</label>
+                    <input type="file" id="csvInput" accept=".csv" required>
+                </div>
             </div>
-            <a id="dlSample" class="sample-link">Download Sample CSV Template</a>
-            <br><br>
-            <input type="file" id="csvInput" accept=".csv" required>
-
-            <button type="submit" class="btn-process">Process & Update Widget</button>
+            <button type="submit" class="btn-process">Process & Generate Preview</button>
         </form>
     </div>
 
-    <div class="pane preview-pane">
-        <div class="mobile-widget">
-            <div class="widget-header">
-                <span>My Tasks</span>
-                <span id="widgetBadge" class="store-badge">Select Store</span>
-            </div>
-            <div id="widgetContent" class="widget-content">
-                <div class="empty-state">
-                    No tasks assigned yet.<br>Use the Admin Portal to upload a CSV.
-                </div>
+    <div class="preview-container">
+        <div class="widget-header">
+            <span>My Tasks Preview</span>
+            <span id="widgetBadge" class="store-badge">Select Store</span>
+        </div>
+        <div id="widgetContent" class="widget-content">
+            <div class="empty-state">
+                No tasks assigned yet. Please upload a file above.
             </div>
         </div>
     </div>
+
 </div>
 
 <script>
@@ -167,12 +265,10 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
     function parseCSV(text) {
         const lines = text.split('\n');
         const tasks = [];
-        // Skip header (i=1)
         for(let i=1; i<lines.length; i++) {
             const line = lines[i].trim();
             if(line) {
                 const p = line.split(',');
-                // Simple parsing (Group, Task, Due, Desc, URL)
                 tasks.push({
                     group: p[0]?.trim() || 'General',
                     name: p[1]?.trim() || 'New Task',
@@ -188,30 +284,26 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
     // --- 3. Render Widget ---
     function renderWidget(storeName, tasks) {
         const container = document.getElementById('widgetContent');
-        document.getElementById('widgetBadge').innerText = storeName === "All Locations" ? "All" : storeName.split('-')[0].trim(); // Shorten badge
+        document.getElementById('widgetBadge').innerText = storeName === "All Locations" ? "All" : storeName.split('-')[0].trim();
         
-        container.innerHTML = ''; // Clear current
+        container.innerHTML = '';
 
         if(tasks.length === 0) {
             container.innerHTML = '<div class="empty-state">CSV contained no valid tasks.</div>';
             return;
         }
 
-        // Grouping
         const groups = {};
         tasks.forEach(t => {
             if(!groups[t.group]) groups[t.group] = [];
             groups[t.group].push(t);
         });
 
-        // Generate HTML
         for(const [grp, items] of Object.entries(groups)) {
             let html = `<div class="group-header">${grp}</div>`;
             
             items.forEach((task, idx) => {
                 const uniqueId = `task-${grp}-${idx}`.replace(/\s+/g,'');
-                
-                // Logic for Hyperlink
                 const titleHtml = (task.url && task.url.length > 4) 
                     ? `<a href="${task.url}" target="_blank">${task.name}</a>` 
                     : task.name;
@@ -236,14 +328,9 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
         }
     }
 
-    // --- 4. Toggle Strikethrough ---
     window.toggleTask = function(id) {
         const card = document.getElementById(`card-${id}`);
-        if(card.classList.contains('completed')) {
-            card.classList.remove('completed');
-        } else {
-            card.classList.add('completed');
-        }
+        card.classList.toggle('completed');
     }
 </script>
 
