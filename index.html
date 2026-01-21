@@ -31,13 +31,48 @@
         .admin-panel {
             background: #f4f6f8;
             border: 1px solid var(--border);
-            padding: 15px;
             border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        .admin-header h2 { margin: 0 0 5px 0; font-size: 1.2em; color: var(--primary); }
-        .admin-desc { color: #666; font-size: 0.9em; margin-bottom: 15px; }
+        .admin-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #eef2f5;
+            cursor: pointer; /* Click header to toggle */
+        }
 
+        .admin-title-area h2 { margin: 0; font-size: 1.1em; color: var(--primary); }
+        .admin-title-area span { font-size: 0.8em; color: #666; font-weight: normal; margin-left: 8px; }
+
+        /* Toggle Button Styling */
+        .toggle-btn {
+            background: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            color: #555;
+            background: white;
+        }
+        .toggle-btn:hover { background: #eee; }
+
+        /* The collapsable content area */
+        .admin-content {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            display: block; /* Default to visible */
+        }
+        
+        /* Class to hide content */
+        .collapsed .admin-content { display: none; }
+        .collapsed .admin-header { border-bottom: none; }
+
+        /* Form Elements */
         .input-row {
             display: flex;
             gap: 10px;
@@ -121,9 +156,20 @@
         .task-details { flex: 1; }
         
         .task-meta { display: flex; justify-content: space-between; font-size: 0.75em; color: #999; margin-bottom: 2px; }
+        
+        /* Link Styling */
         .task-title { font-weight: 700; color: #333; font-size: 0.95em; margin-bottom: 2px; }
-        .task-title a { color: #2c3e50; text-decoration: none; border-bottom: 1px dotted #333; }
-        .task-title a:hover { color: var(--accent); border-bottom: 1px solid var(--accent); }
+        .task-title a { 
+            color: #2c3e50; 
+            text-decoration: none; 
+            border-bottom: 1px dotted #333; 
+            cursor: pointer;
+        }
+        .task-title a:hover { 
+            color: var(--accent); 
+            border-bottom: 1px solid var(--accent); 
+        }
+        
         .task-desc { font-size: 0.85em; color: #666; line-height: 1.3; }
 
         /* Completed State */
@@ -139,34 +185,41 @@
 
 <div class="container">
     
-    <div class="admin-panel">
-        <div class="admin-header">
-            <h2>Admin Portal</h2>
-            <div class="admin-desc">
-                Upload CSV to assign tasks. 
-                <a id="dlSample" class="sample-link">Download Template</a>
+    <div id="adminPanel" class="admin-panel">
+        
+        <div class="admin-header" onclick="toggleAdmin()">
+            <div class="admin-title-area">
+                <h2>Admin Portal <span>(Upload Tasks)</span></h2>
             </div>
+            <button id="toggleBtn" class="toggle-btn">Hide</button>
         </div>
 
-        <div id="adminControls">
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Target Store</label>
-                    <select id="storeSelect">
-                        <option value="All Locations">All Locations</option>
-                        <option value="BAM #102 - Birmingham">BAM #102 - Birmingham</option>
-                        <option value="BAM #305 - Nashville">BAM #305 - Nashville</option>
-                        <option value="BAM #412 - Orlando">BAM #412 - Orlando</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Task CSV File</label>
-                    <input type="file" id="csvInput" accept=".csv">
-                </div>
+        <div class="admin-content">
+            <div class="admin-desc">
+                Upload CSV to assign tasks to stores. 
+                <a id="dlSample" class="sample-link">Download Template</a>
             </div>
-            
-            <button type="button" id="processBtn" class="btn-process">Process & Assign Tasks</button>
-            <div id="statusMsg" class="status-msg"></div>
+
+            <div id="adminControls">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Target Store</label>
+                        <select id="storeSelect">
+                            <option value="All Locations">All Locations</option>
+                            <option value="BAM #102 - Birmingham">BAM #102 - Birmingham</option>
+                            <option value="BAM #305 - Nashville">BAM #305 - Nashville</option>
+                            <option value="BAM #412 - Orlando">BAM #412 - Orlando</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Task CSV File</label>
+                        <input type="file" id="csvInput" accept=".csv">
+                    </div>
+                </div>
+                
+                <button type="button" id="processBtn" class="btn-process">Process & Assign Tasks</button>
+                <div id="statusMsg" class="status-msg"></div>
+            </div>
         </div>
     </div>
 
@@ -185,11 +238,37 @@
 </div>
 
 <script>
-    // --- 1. Sample CSV Logic ---
+    // --- 1. Toggle Functionality ---
+    window.toggleAdmin = function() {
+        const panel = document.getElementById('adminPanel');
+        const btn = document.getElementById('toggleBtn');
+        
+        // Toggle the class
+        panel.classList.toggle('collapsed');
+        
+        // Update button text
+        if (panel.classList.contains('collapsed')) {
+            btn.innerText = "Show";
+        } else {
+            btn.innerText = "Hide";
+        }
+    }
+
+    // --- 2. Helper: Fix Broken URLs ---
+    function sanitizeUrl(url) {
+        if (!url) return '';
+        let cleanUrl = url.trim();
+        if (!/^https?:\/\//i.test(cleanUrl)) {
+            cleanUrl = 'https://' + cleanUrl;
+        }
+        return cleanUrl;
+    }
+
+    // --- 3. Sample CSV Logic ---
     const sampleData = `Group,Task,Due,Desc,URL
 Morning Ops,Open Registers,8:00 AM,Count drawers and login.,https://example.com/pos
 Morning Ops,Unlock Doors,9:00 AM,Safety check perimeter.,
-Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
+Inventory,Process Returns,2:00 PM,Scan RMA items.,www.google.com`;
     
     try {
         const blob = new Blob([sampleData], { type: 'text/csv' });
@@ -200,14 +279,15 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
         console.log("Blob creation blocked by environment");
     }
 
-    // --- 2. Button Click Handler (Replaces Form Submit) ---
-    document.getElementById('processBtn').addEventListener('click', function() {
+    // --- 4. Button Click Handler ---
+    document.getElementById('processBtn').addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent toggling the header when clicking the button
+        
         const statusEl = document.getElementById('statusMsg');
         const fileInput = document.getElementById('csvInput');
         const store = document.getElementById('storeSelect').value;
         const file = fileInput.files[0];
 
-        // Reset Status
         statusEl.innerText = "Processing...";
         statusEl.className = "status-msg";
 
@@ -224,7 +304,6 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
                 const text = e.target.result;
                 const tasks = parseCSV(text);
                 renderWidget(store, tasks);
-                
                 statusEl.innerText = "Success! Widget updated below.";
                 statusEl.classList.add("status-success");
             } catch (err) {
@@ -241,11 +320,10 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
         reader.readAsText(file);
     });
 
-    // --- 3. CSV Parser ---
+    // --- 5. CSV Parser ---
     function parseCSV(text) {
         const lines = text.split('\n');
         const tasks = [];
-        // Skip header (i=1)
         for(let i=1; i<lines.length; i++) {
             const line = lines[i].trim();
             if(line) {
@@ -262,12 +340,12 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
         return tasks;
     }
 
-    // --- 4. Render Widget ---
+    // --- 6. Render Widget ---
     function renderWidget(storeName, tasks) {
         const container = document.getElementById('widgetContent');
         document.getElementById('widgetBadge').innerText = storeName === "All Locations" ? "All" : storeName.split('-')[0].trim();
         
-        container.innerHTML = ''; // Clear current
+        container.innerHTML = ''; 
 
         if(tasks.length === 0) {
             container.innerHTML = '<div class="empty-state">CSV contained no valid tasks.</div>';
@@ -286,9 +364,11 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
             items.forEach((task, idx) => {
                 const uniqueId = `task-${grp}-${idx}`.replace(/\s+/g,'');
                 
-                const titleHtml = (task.url && task.url.length > 4) 
-                    ? `<a href="${task.url}" target="_blank">${task.name}</a>` 
-                    : task.name;
+                let titleHtml = task.name;
+                if (task.url && task.url.length > 3) {
+                    const safeUrl = sanitizeUrl(task.url);
+                    titleHtml = `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${task.name}</a>`;
+                }
 
                 html += `
                 <div class="task-card" id="card-${uniqueId}">
@@ -310,11 +390,16 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
         }
     }
 
-    // --- 5. Toggle Logic ---
+    // --- 7. Toggle Task Logic ---
     window.toggleTask = function(id) {
         const card = document.getElementById(`card-${id}`);
         card.classList.toggle('completed');
     }
+    
+    // Stop propagation on inputs so clicking them doesn't collapse the header
+    document.querySelector('.admin-content').addEventListener('click', function(e) {
+        e.stopPropagation(); 
+    });
 </script>
 
 </body>
