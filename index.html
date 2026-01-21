@@ -5,177 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAM Task Management System</title>
     <style>
-        /* --- Global Reset & Layout --- */
+        /* --- Global Reset --- */
         :root {
             --primary: #2c3e50;
-            --secondary: #34495e;
             --accent: #e74c3c;
             --bg: #ffffff;
             --border: #ddd;
         }
         
         body { 
-            margin: 0; 
-            padding: 0; 
+            margin: 0; padding: 0; 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
             background: var(--bg); 
             color: #333;
         }
-        
-        /* --- Container Layout --- */
+
         .container {
             display: flex;
-            flex-direction: column; /* Stack vertically for better widget fit */
-            gap: 20px;
-            padding: 20px;
-            max-width: 100%;
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px;
         }
         
-        /* --- SECTION 1: Admin Panel --- */
+        /* --- ADMIN SECTION --- */
         .admin-panel {
-            background: #f9f9f9;
+            background: #f4f6f8;
             border: 1px solid var(--border);
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
         }
 
-        .admin-header h2 { 
-            margin: 0 0 5px 0; 
-            font-size: 1.4em; 
-            color: var(--primary); 
-        }
-        
-        .admin-desc { 
-            color: #666; 
-            font-size: 0.9em; 
-            margin-bottom: 15px; 
-        }
+        .admin-header h2 { margin: 0 0 5px 0; font-size: 1.2em; color: var(--primary); }
+        .admin-desc { color: #666; font-size: 0.9em; margin-bottom: 15px; }
 
-        /* Form Grid - Makes inputs sit side-by-side if space allows */
-        .form-row {
+        .input-row {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             flex-wrap: wrap;
+            margin-bottom: 10px;
         }
         
-        .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
+        .input-group { flex: 1; min-width: 200px; }
         
         label { 
-            display: block; 
-            margin-bottom: 5px; 
-            font-weight: 600; 
-            font-size: 0.9em; 
-            color: var(--secondary); 
+            display: block; margin-bottom: 4px; 
+            font-weight: 600; font-size: 0.85em; color: #555; 
         }
         
         select, input[type="file"] { 
-            width: 100%; 
-            padding: 8px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            box-sizing: border-box; 
-            background: white;
+            width: 100%; padding: 8px; 
+            border: 1px solid #ccc; border-radius: 4px; 
+            box-sizing: border-box; background: white;
         }
         
         .btn-process {
             background-color: var(--primary); 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 1em; 
-            margin-top: 10px;
-            width: 100%; /* Full width button */
-            font-weight: bold;
+            color: white; border: none; 
+            padding: 12px; border-radius: 4px; 
+            cursor: pointer; font-size: 1em; font-weight: bold;
+            width: 100%; transition: background 0.2s;
         }
         .btn-process:hover { background-color: #1a252f; }
         
+        .status-msg {
+            text-align: center; font-size: 0.9em; 
+            margin-top: 8px; font-weight: bold; min-height: 1.2em;
+        }
+        .status-success { color: green; }
+        .status-error { color: var(--accent); }
+
         .sample-link { 
-            display: block; 
-            margin-top: 5px; 
-            font-size: 0.8em; 
-            color: var(--accent); 
-            text-decoration: underline; 
-            cursor: pointer; 
+            display: inline-block; margin-top: 4px; 
+            font-size: 0.8em; color: var(--accent); 
+            text-decoration: underline; cursor: pointer; 
         }
 
-        /* --- SECTION 2: Preview Widget --- */
+        /* --- WIDGET PREVIEW SECTION --- */
         .preview-container {
             border: 1px solid var(--border);
             border-radius: 8px;
             overflow: hidden;
             background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .widget-header { 
-            background: var(--primary); 
-            color: white; 
-            padding: 12px 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+            background: var(--primary); color: white; 
+            padding: 12px; display: flex; 
+            justify-content: space-between; align-items: center; 
         }
         
         .store-badge { 
-            background: var(--accent); 
-            padding: 4px 8px; 
-            border-radius: 4px; 
-            font-size: 0.75em; 
-            font-weight: bold; 
-            text-transform: uppercase; 
+            background: var(--accent); padding: 4px 8px; 
+            border-radius: 4px; font-size: 0.7em; 
+            font-weight: bold; text-transform: uppercase; 
         }
         
-        .widget-content { 
-            padding: 15px; 
-            min-height: 200px; /* Ensures it doesn't collapse */
-        }
+        .widget-content { padding: 15px; }
         
         .group-header {
-            color: var(--primary); 
-            font-size: 0.9em; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid #eee; 
-            margin: 15px 0 10px 0; 
-            padding-bottom: 4px;
+            color: var(--primary); font-size: 0.85em; font-weight: 800; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+            border-bottom: 2px solid #eee; margin: 15px 0 10px 0; padding-bottom: 4px;
         }
 
-        /* Task Card Styling */
+        /* Task Items */
         .task-card {
-            background: white; 
-            border: 1px solid #eee; 
+            background: white; border: 1px solid #eee; 
             border-left: 4px solid var(--accent);
-            border-radius: 6px; 
-            padding: 10px; 
-            margin-bottom: 8px; 
-            transition: all 0.2s ease;
+            border-radius: 6px; padding: 10px; margin-bottom: 8px;
         }
         
         .task-row { display: flex; gap: 10px; align-items: flex-start; }
         .task-check { width: 18px; height: 18px; cursor: pointer; margin-top: 2px; accent-color: var(--primary); }
         .task-details { flex: 1; }
         
-        .task-meta { 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 0.75em; 
-            color: #999; 
-            margin-bottom: 2px; 
-        }
-        
-        .task-title { 
-            font-weight: 700; 
-            color: #333; 
-            font-size: 1em; 
-            margin-bottom: 2px; 
-        }
-        
+        .task-meta { display: flex; justify-content: space-between; font-size: 0.75em; color: #999; margin-bottom: 2px; }
+        .task-title { font-weight: 700; color: #333; font-size: 0.95em; margin-bottom: 2px; }
         .task-title a { color: #2c3e50; text-decoration: none; border-bottom: 1px dotted #333; }
         .task-title a:hover { color: var(--accent); border-bottom: 1px solid var(--accent); }
         .task-desc { font-size: 0.85em; color: #666; line-height: 1.3; }
@@ -186,7 +132,7 @@
         .task-card.completed .task-desc { text-decoration: line-through; color: #bdc3c7; }
         .task-card.completed a { pointer-events: none; }
 
-        .empty-state { text-align: center; color: #999; padding: 30px; font-style: italic; }
+        .empty-state { text-align: center; color: #999; padding: 20px; font-style: italic; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -196,13 +142,16 @@
     <div class="admin-panel">
         <div class="admin-header">
             <h2>Admin Portal</h2>
-            <div class="admin-desc">Upload CSV to assign tasks. <a id="dlSample" class="sample-link">Download Sample CSV</a></div>
+            <div class="admin-desc">
+                Upload CSV to assign tasks. 
+                <a id="dlSample" class="sample-link">Download Template</a>
+            </div>
         </div>
 
-        <form id="adminForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Select Target Store</label>
+        <div id="adminControls">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Target Store</label>
                     <select id="storeSelect">
                         <option value="All Locations">All Locations</option>
                         <option value="BAM #102 - Birmingham">BAM #102 - Birmingham</option>
@@ -210,23 +159,25 @@
                         <option value="BAM #412 - Orlando">BAM #412 - Orlando</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Upload Task CSV</label>
-                    <input type="file" id="csvInput" accept=".csv" required>
+                <div class="input-group">
+                    <label>Task CSV File</label>
+                    <input type="file" id="csvInput" accept=".csv">
                 </div>
             </div>
-            <button type="submit" class="btn-process">Process & Generate Preview</button>
-        </form>
+            
+            <button type="button" id="processBtn" class="btn-process">Process & Assign Tasks</button>
+            <div id="statusMsg" class="status-msg"></div>
+        </div>
     </div>
 
     <div class="preview-container">
         <div class="widget-header">
-            <span>My Tasks Preview</span>
+            <span>My Tasks</span>
             <span id="widgetBadge" class="store-badge">Select Store</span>
         </div>
         <div id="widgetContent" class="widget-content">
             <div class="empty-state">
-                No tasks assigned yet. Please upload a file above.
+                Waiting for tasks...
             </div>
         </div>
     </div>
@@ -240,31 +191,61 @@ Morning Ops,Open Registers,8:00 AM,Count drawers and login.,https://example.com/
 Morning Ops,Unlock Doors,9:00 AM,Safety check perimeter.,
 Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
     
-    const blob = new Blob([sampleData], { type: 'text/csv' });
-    const link = document.getElementById('dlSample');
-    link.href = URL.createObjectURL(blob);
-    link.download = "bam_task_template.csv";
+    try {
+        const blob = new Blob([sampleData], { type: 'text/csv' });
+        const link = document.getElementById('dlSample');
+        link.href = URL.createObjectURL(blob);
+        link.download = "bam_task_template.csv";
+    } catch(err) {
+        console.log("Blob creation blocked by environment");
+    }
 
-    // --- 2. Process CSV ---
-    document.getElementById('adminForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const file = document.getElementById('csvInput').files[0];
+    // --- 2. Button Click Handler (Replaces Form Submit) ---
+    document.getElementById('processBtn').addEventListener('click', function() {
+        const statusEl = document.getElementById('statusMsg');
+        const fileInput = document.getElementById('csvInput');
         const store = document.getElementById('storeSelect').value;
+        const file = fileInput.files[0];
 
-        if(!file) return;
+        // Reset Status
+        statusEl.innerText = "Processing...";
+        statusEl.className = "status-msg";
+
+        if(!file) {
+            statusEl.innerText = "Error: Please select a CSV file first.";
+            statusEl.classList.add("status-error");
+            return;
+        }
 
         const reader = new FileReader();
+        
         reader.onload = function(e) {
-            const text = e.target.result;
-            const tasks = parseCSV(text);
-            renderWidget(store, tasks);
+            try {
+                const text = e.target.result;
+                const tasks = parseCSV(text);
+                renderWidget(store, tasks);
+                
+                statusEl.innerText = "Success! Widget updated below.";
+                statusEl.classList.add("status-success");
+            } catch (err) {
+                statusEl.innerText = "Error processing file.";
+                statusEl.classList.add("status-error");
+            }
         };
+
+        reader.onerror = function() {
+            statusEl.innerText = "Error reading file.";
+            statusEl.classList.add("status-error");
+        };
+
         reader.readAsText(file);
     });
 
+    // --- 3. CSV Parser ---
     function parseCSV(text) {
         const lines = text.split('\n');
         const tasks = [];
+        // Skip header (i=1)
         for(let i=1; i<lines.length; i++) {
             const line = lines[i].trim();
             if(line) {
@@ -281,12 +262,12 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
         return tasks;
     }
 
-    // --- 3. Render Widget ---
+    // --- 4. Render Widget ---
     function renderWidget(storeName, tasks) {
         const container = document.getElementById('widgetContent');
         document.getElementById('widgetBadge').innerText = storeName === "All Locations" ? "All" : storeName.split('-')[0].trim();
         
-        container.innerHTML = '';
+        container.innerHTML = ''; // Clear current
 
         if(tasks.length === 0) {
             container.innerHTML = '<div class="empty-state">CSV contained no valid tasks.</div>';
@@ -304,6 +285,7 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
             
             items.forEach((task, idx) => {
                 const uniqueId = `task-${grp}-${idx}`.replace(/\s+/g,'');
+                
                 const titleHtml = (task.url && task.url.length > 4) 
                     ? `<a href="${task.url}" target="_blank">${task.name}</a>` 
                     : task.name;
@@ -328,6 +310,7 @@ Inventory,Process Returns,2:00 PM,Scan RMA items.,https://example.com/returns`;
         }
     }
 
+    // --- 5. Toggle Logic ---
     window.toggleTask = function(id) {
         const card = document.getElementById(`card-${id}`);
         card.classList.toggle('completed');
